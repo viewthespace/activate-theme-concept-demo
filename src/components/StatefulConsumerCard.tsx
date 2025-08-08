@@ -1,5 +1,8 @@
+import { useEffect, useRef } from "react";
 import { useTheme } from "../hooks/useTheme";
 import { ThemeButton } from "./ui";
+import { benchmarkTracker } from "../utils/benchmarkUtils";
+import { BENCHMARK_THEMES } from "../utils/themeUtils";
 
 function Swatch({ label, color }: { label: string; color: string }) {
   // Validate that color is a string and has valid hex format
@@ -27,7 +30,35 @@ function Swatch({ label, color }: { label: string; color: string }) {
 }
 
 export function StatefulConsumerCard() {
-  const { theme } = useTheme();
+  const { theme, applyTheme } = useTheme();
+  const renderStartRef = useRef<number | null>(null);
+
+  // Listen for benchmark theme changes
+  useEffect(() => {
+    const handleBenchmarkTheme = (event: CustomEvent) => {
+      const newTheme = event.detail;
+      
+      // Mark the start of the render cycle
+      renderStartRef.current = performance.now();
+      
+      // Apply the theme (this will trigger a re-render)
+      applyTheme(BENCHMARK_THEMES[newTheme as keyof typeof BENCHMARK_THEMES]);
+    };
+
+    window.addEventListener('benchmark-theme-change', handleBenchmarkTheme as EventListener);
+    return () => {
+      window.removeEventListener('benchmark-theme-change', handleBenchmarkTheme as EventListener);
+    };
+  }, [applyTheme]);
+
+  // Measure the actual render time when the component re-renders
+  useEffect(() => {
+    if (renderStartRef.current !== null) {
+      const renderTime = performance.now() - renderStartRef.current;
+      benchmarkTracker.recordRender('context', renderTime);
+      renderStartRef.current = null;
+    }
+  });
 
   return (
     <div className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 shadow-2xl transition-all duration-300">

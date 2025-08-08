@@ -103,3 +103,54 @@ export async function fetchThemeFromAPI(name: string): Promise<Partial<Theme>> {
   // Partial example: only tweak one token, leave others as-is
   return { primaryColor: "#7c3aed" }; // violet-600
 }
+
+// ====== Synchronous theme functions for benchmarking ======
+export function getThemeSync(name: string): Partial<Theme> {
+  if (name === "solarized") {
+    const backgroundColor = "#002b36";
+    return {
+      primaryColor: "#268bd2",
+      secondaryColor: "#2aa198",
+      backgroundColor,
+      textColor: getContrastColor(backgroundColor),
+    };
+  }
+  if (name === "light") {
+    const backgroundColor = "#ffffff";
+    return {
+      primaryColor: "#1d4ed8",
+      secondaryColor: "#059669",
+      backgroundColor,
+      textColor: getContrastColor(backgroundColor),
+    };
+  }
+  // Partial example: only tweak one token, leave others as-is
+  return { primaryColor: "#7c3aed" }; // violet-600
+}
+
+export const BENCHMARK_THEMES = {
+  solarized: {
+    primaryColor: "#268bd2",
+    secondaryColor: "#2aa198",
+    backgroundColor: "#002b36",
+    textColor: "#ffffff",
+  },
+  light: {
+    primaryColor: "#1d4ed8",
+    secondaryColor: "#059669",
+    backgroundColor: "#ffffff",
+    textColor: "#000000",
+  },
+  dark: {
+    primaryColor: "#3b82f6",
+    secondaryColor: "#10b981",
+    backgroundColor: "#0f172a",
+    textColor: "#ffffff",
+  },
+  purple: {
+    primaryColor: "#8b5cf6",
+    secondaryColor: "#ec4899",
+    backgroundColor: "#1e1b4b",
+    textColor: "#ffffff",
+  },
+} as const;

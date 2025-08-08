@@ -4,6 +4,7 @@ import { ThemeControls } from './components/ThemeControls';
 import { TokenConsumerCard } from './components/TokenConsumerCard';
 import { StatefulConsumerCard } from './components/StatefulConsumerCard';
 import { TransitionModal } from './components/TransitionModal';
+import { BenchmarkDisplay } from './components/BenchmarkDisplay';
 import { DEFAULT_THEME } from './constants/themes';
 
 // Tailwind class constants for better readability
@@ -83,6 +84,13 @@ function AppContent() {
             <TokenConsumerCard />
             <StatefulConsumerCard />
           </div>
+        </div>
+      </div>
+
+      {/* Benchmark Section */}
+      <div className="px-6 pb-12">
+        <div className="max-w-7xl mx-auto">
+          <BenchmarkDisplay />
         </div>
       </div>
 

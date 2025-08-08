@@ -1,4 +1,7 @@
+import { useEffect } from "react";
 import { TokenButton } from "./ui";
+import { benchmarkTracker } from "../utils/benchmarkUtils";
+import { BENCHMARK_THEMES } from "../utils/themeUtils";
 
 // Simple color swatch component
 function ColorSwatch({ label, cssVariable }: { label: string; cssVariable: string }) {
@@ -22,6 +25,36 @@ function ColorSwatch({ label, cssVariable }: { label: string; cssVariable: strin
 }
 
 export function TokenConsumerCard() {
+  // Listen for benchmark theme changes
+  useEffect(() => {
+    const handleBenchmarkTheme = (event: CustomEvent) => {
+      const newTheme = event.detail;
+      
+      // Measure the complete CSS token update process
+      const start = performance.now();
+      const theme = BENCHMARK_THEMES[newTheme as keyof typeof BENCHMARK_THEMES];
+      
+      // Simulate the complete process: theme lookup + DOM query + style updates
+      const style = document.documentElement.style;
+      style.setProperty('--primary-color', theme.primaryColor);
+      style.setProperty('--secondary-color', theme.secondaryColor);
+      style.setProperty('--background-color', theme.backgroundColor);
+      style.setProperty('--text-color', theme.textColor);
+      
+      // Force a reflow to ensure the changes are applied
+      document.documentElement.offsetHeight;
+      
+      const end = performance.now();
+      
+      benchmarkTracker.recordRender('tokens', end - start);
+    };
+
+    window.addEventListener('benchmark-theme-change', handleBenchmarkTheme as EventListener);
+    return () => {
+      window.removeEventListener('benchmark-theme-change', handleBenchmarkTheme as EventListener);
+    };
+  }, []);
+
   return (
     <div className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 shadow-2xl transition-all duration-300">
       {/* Animated background gradient */}
