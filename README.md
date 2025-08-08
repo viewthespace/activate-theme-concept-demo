@@ -17,6 +17,125 @@ A beautiful demonstration of dynamic theming with React, TypeScript, and Tailwin
 - **Expandable Results**: Detailed individual measurement breakdowns
 - **Stress Testing**: Automated performance testing with rapid theme changes
 
+## 🏗️ Architecture & Theme Separation
+
+This project demonstrates two distinct approaches to theme consumption with strict separation:
+
+### Token Consumers (e.g., `TokenConsumerCard.tsx`)
+
+- **ONLY** use CSS custom properties: `bg-[var(--primary-color)]`, `text-[var(--text-color)]`
+- **NEVER** import or use the centralized styling system (which contains CSS token references)
+- **NEVER** access the theme context directly
+- Use inline Tailwind classes with CSS variables
+
+### Stateful Consumers (e.g., `StatefulConsumerCard.tsx`)
+
+- **ONLY** use stateful theme values: `style={{ backgroundColor: theme.primaryColor }}`
+- **NEVER** use CSS custom properties or the centralized styling system
+- **NEVER** use CSS token references like `var(--primary-color)`
+- Access theme through React context: `const { theme } = useTheme()`
+
+### Other Components (e.g., `App.tsx`, `BenchmarkDisplay.tsx`)
+
+- Can use the centralized styling system
+- Can mix both approaches as needed
+- Not bound by the strict separation requirements
+
+## 🎨 Styling Strategy
+
+The project uses a **centralized, consistent styling strategy** that provides scalable, maintainable styling while respecting theme separation:
+
+### Core Principles
+
+1. **Centralized Style Definitions**: All common styles are defined in `src/utils/styling.ts`
+2. **Type Safety**: Full TypeScript support with proper type checking
+3. **Theme Awareness**: Styles automatically adapt to the current theme
+4. **Consistency**: Reusable patterns across all components
+5. **Maintainability**: Single source of truth for styling decisions
+6. **Separation of Concerns**: Strict adherence to theme consumption patterns
+
+### Key Features
+
+#### Utility Functions
+
+```typescript
+import { cn } from "../utils/styling";
+
+// Combines class names with proper type safety
+const className = cn(
+  "base-class",
+  condition && "conditional-class",
+  "another-class"
+);
+```
+
+#### Style Objects
+
+```typescript
+import { cardStyles, buildButtonStyles } from "../utils/styling";
+
+// Card styles
+<div className={cardStyles.base}>
+  <div className={cardStyles.content}>
+    <h2 className={cardStyles.title}>Title</h2>
+  </div>
+</div>
+
+// Button styles with variants
+<button className={buildButtonStyles("primary")}>Click me</button>
+```
+
+#### Theme-Aware Styles
+
+```typescript
+import { themeAwareStyles } from '../utils/styling';
+
+// Automatically adapts to current theme
+<span className={themeAwareStyles.text.primary}>Primary text</span>
+<span className={themeAwareStyles.text.secondary}>Secondary text</span>
+```
+
+### Available Style Categories
+
+- **Core Components**: `cardStyles`, `buttonStyles`, `sectionStyles`, `gridStyles`
+- **UI Elements**: `formStyles`, `statusStyles`, `infoStyles`
+- **Theme Integration**: `themeAwareStyles`, `animationStyles`, `responsiveStyles`
+- **Builder Functions**: `buildCardStyles()`, `buildButtonStyles()`, `buildSectionStyles()`
+
+## 🔧 Code Organization & Refactoring
+
+The codebase has been refactored to improve maintainability while preserving the core theme separation:
+
+### Key Improvements
+
+1. **Eliminated Duplicate Code**: Single source of truth for theme definitions and validation
+2. **Shared Components**: Unified `Swatch` and `ButtonBase` components for both consumer types
+3. **Centralized Validation**: Comprehensive validation utilities in `src/utils/validation.ts`
+4. **Centralized Theme Application**: Unified theme application logic in `src/utils/themeApplication.ts`
+5. **Enhanced Type Safety**: Shared TypeScript interfaces and consistent prop types
+
+### Shared Components
+
+#### Swatch Component (`src/components/ui/Swatch.tsx`)
+
+- Unified color swatch for both StatefulTheme and Token consumers
+- Accepts either `color` (for StatefulTheme) or `cssVariable` (for Token consumers)
+- Maintains strict separation between approaches
+
+#### ButtonBase Component (`src/components/ui/ButtonBase.tsx`)
+
+- Shared base for all button components
+- Common button styles and behavior
+- TypeScript interfaces for consistent props
+
+### Benefits Achieved
+
+- **Reduced Code Duplication**: Eliminated ~100 lines of duplicate code
+- **Improved Maintainability**: Centralized validation and shared components
+- **Enhanced Type Safety**: Shared interfaces and consistent prop types
+- **Better Code Organization**: Logical grouping of related utilities
+- **Preserved Architecture**: Maintained strict separation between consumer types
+
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -112,18 +231,27 @@ src/
 │   ├── TransitionModal.tsx
 │   ├── BenchmarkDisplay.tsx
 │   └── ui/             # Reusable UI components
+│       ├── Button.tsx
+│       ├── ButtonBase.tsx
+│       ├── Swatch.tsx
+│       ├── ThemeButton.tsx
+│       └── TokenButton.tsx
 ├── context/            # React Context providers
 │   ├── ThemeContext.tsx
 │   └── ThemeContextValue.ts
 ├── hooks/              # Custom React hooks
 │   └── useTheme.ts
 ├── constants/          # Application constants
+│   ├── index.ts
 │   └── themes.ts
 ├── types/              # TypeScript type definitions
 │   └── index.ts
 ├── utils/              # Utility functions
 │   ├── themeUtils.ts
-│   └── benchmarkUtils.ts
+│   ├── benchmarkUtils.ts
+│   ├── styling.ts
+│   ├── validation.ts
+│   └── themeApplication.ts
 └── App.tsx            # Main application component
 ```
 
@@ -161,6 +289,13 @@ export const BENCHMARK_THEMES = {
 };
 ```
 
+2. Use the theme in your components:
+
+```typescript
+const { applyTheme } = useTheme();
+applyTheme(BENCHMARK_THEMES.solarized);
+```
+
 ### Benchmark Configuration
 
 The benchmark system can be customized by modifying `src/utils/benchmarkUtils.ts`:
@@ -168,13 +303,6 @@ The benchmark system can be customized by modifying `src/utils/benchmarkUtils.ts
 - **Measurement Frequency**: Adjust update intervals for real-time stats
 - **Percentile Calculations**: Modify P50/P99 calculation methods
 - **Performance Thresholds**: Change color coding thresholds for results
-
-2. Use the theme in your components:
-
-```typescript
-const { applyTheme } = useTheme();
-applyTheme(BENCHMARK_THEMES.solarized);
-```
 
 ### Styling
 
