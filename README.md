@@ -12,6 +12,10 @@ A beautiful demonstration of dynamic theming with React, TypeScript, and Tailwin
 - **Theme Context**: React Context API for global theme state management
 - **Transition Animations**: Smooth loading transitions between themes
 - **Contrast Calculation**: Automatic text color calculation based on background luminance
+- **Performance Benchmarking**: Comprehensive comparison between context vs token-based theming
+- **Real-time Metrics**: Live performance measurements with P50/P99 percentiles
+- **Expandable Results**: Detailed individual measurement breakdowns
+- **Stress Testing**: Automated performance testing with rapid theme changes
 
 ## 🚀 Quick Start
 
@@ -72,6 +76,7 @@ interface Theme {
 - **TokenConsumerCard**: Demonstrates theme token consumption
 - **StatefulConsumerCard**: Shows stateful theme usage
 - **TransitionModal**: Smooth loading transitions
+- **BenchmarkDisplay**: Real-time performance comparison interface
 
 ### Usage Example
 
@@ -105,15 +110,20 @@ src/
 │   ├── TokenConsumerCard.tsx
 │   ├── StatefulConsumerCard.tsx
 │   ├── TransitionModal.tsx
+│   ├── BenchmarkDisplay.tsx
 │   └── ui/             # Reusable UI components
 ├── context/            # React Context providers
-│   └── ThemeContext.tsx
+│   ├── ThemeContext.tsx
+│   └── ThemeContextValue.ts
+├── hooks/              # Custom React hooks
+│   └── useTheme.ts
 ├── constants/          # Application constants
 │   └── themes.ts
 ├── types/              # TypeScript type definitions
 │   └── index.ts
 ├── utils/              # Utility functions
-│   └── themeUtils.ts
+│   ├── themeUtils.ts
+│   └── benchmarkUtils.ts
 └── App.tsx            # Main application component
 ```
 
@@ -125,6 +135,7 @@ src/
 - **Vite** - Fast build tool and dev server
 - **CSS Custom Properties** - Dynamic CSS variables
 - **CSS Grid** - Modern layout system
+- **Performance API** - High-precision timing measurements
 
 ## 🔧 Customization
 
@@ -133,19 +144,36 @@ src/
 1. Define your theme in `src/constants/themes.ts`:
 
 ```typescript
-export const CUSTOM_THEME: Theme = {
-  primaryColor: "#your-color",
-  secondaryColor: "#your-color",
-  backgroundColor: "#your-color",
-  textColor: "#your-color",
+export const BENCHMARK_THEMES = {
+  solarized: {
+    primaryColor: "#268bd2",
+    secondaryColor: "#2aa198",
+    backgroundColor: "#002b36",
+    textColor: "#ffffff",
+  },
+  light: {
+    primaryColor: "#1d4ed8",
+    secondaryColor: "#059669",
+    backgroundColor: "#ffffff",
+    textColor: "#000000",
+  },
+  // Add more themes as needed...
 };
 ```
+
+### Benchmark Configuration
+
+The benchmark system can be customized by modifying `src/utils/benchmarkUtils.ts`:
+
+- **Measurement Frequency**: Adjust update intervals for real-time stats
+- **Percentile Calculations**: Modify P50/P99 calculation methods
+- **Performance Thresholds**: Change color coding thresholds for results
 
 2. Use the theme in your components:
 
 ```typescript
 const { applyTheme } = useTheme();
-applyTheme(CUSTOM_THEME);
+applyTheme(BENCHMARK_THEMES.solarized);
 ```
 
 ### Styling
@@ -160,6 +188,32 @@ The project uses Tailwind CSS with CSS custom properties. Theme colors are appli
   --text-color: #ffffff;
 }
 ```
+
+## 📊 Performance Benchmarking
+
+The application includes a comprehensive benchmark system to compare the performance of different theming approaches:
+
+### Benchmark Features
+
+- **Real-time Measurement**: Live performance tracking during theme changes
+- **Dual Comparison**: Context-based vs CSS token-based theming
+- **Statistical Analysis**: P50 (median) and P99 percentile calculations
+- **Expandable Results**: Detailed breakdown of individual measurements
+- **Stress Testing**: Automated rapid theme switching for intensive testing
+
+### How to Use the Benchmark
+
+1. **Start Benchmark**: Click "Start Benchmark" to begin collecting data
+2. **Single Test**: Use "Single Test" for individual theme changes
+3. **Stress Test**: Use "Stress Test (5s)" for intensive performance testing
+4. **View Results**: Expand the results sections to see detailed measurements
+5. **Compare Performance**: See which approach (context vs tokens) performs better
+
+### What Gets Measured
+
+- **Context Approach**: Full React re-render cycle including state updates and reconciliation
+- **Token Approach**: Direct CSS variable updates with DOM reflow costs
+- **Real-world Performance**: Actual user experience differences between approaches
 
 ## 📱 Responsive Design
 
