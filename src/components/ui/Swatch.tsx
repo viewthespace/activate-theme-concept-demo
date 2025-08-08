@@ -1,29 +1,18 @@
-import { isValidHexColor } from '../../utils/validation';
-
-interface SwatchProps {
-  label: string;
-  color?: string; // For StatefulTheme consumers
-  cssVariable?: string; // For Token consumers
-  className?: string;
-}
+type SwatchProps = 
+  | {
+      label: string;
+      color: string; // For StatefulTheme consumers
+      cssVariable?: never;
+      className?: string;
+    }
+  | {
+      label: string;
+      color?: never;
+      cssVariable: string; // For Token consumers
+      className?: string;
+    };
 
 export function Swatch({ label, color, cssVariable, className = '' }: SwatchProps) {
-  // Validate that we have either color or cssVariable, but not both
-  if (!color && !cssVariable) {
-    console.warn('Swatch: Either color or cssVariable must be provided');
-    return null;
-  }
-  
-  if (color && cssVariable) {
-    console.warn('Swatch: Only one of color or cssVariable should be provided');
-    return null;
-  }
-
-  // For StatefulTheme consumers: validate color format
-  if (color && !isValidHexColor(color)) {
-    return null;
-  }
-
   const backgroundColor = color || `var(${cssVariable})`;
   const displayValue = color || cssVariable;
 
