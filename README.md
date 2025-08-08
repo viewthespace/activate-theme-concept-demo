@@ -2,6 +2,12 @@
 
 A beautiful demonstration of dynamic theming with React, TypeScript, and Tailwind CSS. This project showcases a sophisticated theme system that allows real-time theme switching with smooth transitions and CSS custom properties.
 
+## 🎥 Preview
+
+https://github.com/your-username/theme-demo/assets/your-user-id/theme-demo-recording.mov
+
+_Watch the demo in action - real-time theme switching with performance benchmarking_
+
 ## ✨ Features
 
 - **Dynamic Theme Switching**: Real-time theme changes with smooth transitions
