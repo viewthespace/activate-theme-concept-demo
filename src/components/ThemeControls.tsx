@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { useTheme } from "../context/ThemeContext";
+import { useTheme } from "../hooks/useTheme";
 import { fetchThemeFromAPI } from "../utils/themeUtils";
 import { Button } from "./ui";
 
@@ -7,16 +7,16 @@ export function ThemeControls() {
   const { applyTheme, removeTheme, setIsLoading, setCurrentThemeName } = useTheme();
 
   const onSelect = useCallback(async (preset: string) => {
-    console.log('ThemeControls: Starting theme change to', preset);
+    // Prevent multiple simultaneous theme changes
     setIsLoading(true);
     setCurrentThemeName(preset);
-    console.log('ThemeControls: Set loading state to true');
     try {
       const payload = await fetchThemeFromAPI(preset);
-      console.log('ThemeControls: Received theme payload', payload);
       applyTheme(payload);
+    } catch (error) {
+      console.error('Failed to fetch theme:', error);
+      // Optionally show user feedback here
     } finally {
-      console.log('ThemeControls: Setting loading state to false');
       setIsLoading(false);
       setCurrentThemeName("");
     }

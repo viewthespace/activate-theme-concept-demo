@@ -1,4 +1,5 @@
-import { ThemeProvider, useTheme } from './context/ThemeContext';
+import { ThemeProvider } from './context/ThemeContext';
+import { useTheme } from './hooks/useTheme';
 import { ThemeControls } from './components/ThemeControls';
 import { TokenConsumerCard } from './components/TokenConsumerCard';
 import { StatefulConsumerCard } from './components/StatefulConsumerCard';

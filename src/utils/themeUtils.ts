@@ -6,13 +6,16 @@ export const THEME_STYLE_ID = "theme-tokens";
 // Color contrast calculation utilities
 function hexToRgb(hex: string): { r: number; g: number; b: number } {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result
-    ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16),
-      }
-    : { r: 0, g: 0, b: 0 };
+  if (!result) {
+    throw new Error(
+      `Invalid hex color format: ${hex}. Expected format: #RRGGBB`
+    );
+  }
+  return {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16),
+  };
 }
 
 function calculateLuminance(r: number, g: number, b: number): number {
@@ -23,13 +26,19 @@ function calculateLuminance(r: number, g: number, b: number): number {
   return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
 }
 
-function getContrastColor(backgroundColor: string): string {
-  const rgb = hexToRgb(backgroundColor);
-  const luminance = calculateLuminance(rgb.r, rgb.g, rgb.b);
+export function getContrastColor(backgroundColor: string): string {
+  try {
+    const rgb = hexToRgb(backgroundColor);
+    const luminance = calculateLuminance(rgb.r, rgb.g, rgb.b);
 
-  // Use white text on dark backgrounds, black text on light backgrounds
-  // Threshold of 0.5 provides good contrast for most cases
-  return luminance > 0.5 ? "#000000" : "#ffffff";
+    // Use white text on dark backgrounds, black text on light backgrounds
+    // Threshold of 0.5 provides good contrast for most cases
+    return luminance > 0.5 ? "#000000" : "#ffffff";
+  } catch (error) {
+    console.error("Error calculating contrast color:", error);
+    // Fallback to a safe default
+    return "#ffffff";
+  }
 }
 
 export function ensureStyleNode(): HTMLStyleElement | null {
@@ -44,6 +53,21 @@ export function ensureStyleNode(): HTMLStyleElement | null {
 }
 
 export function themeToCSS(theme: Theme): string {
+  // Validate theme colors before generating CSS
+  const validateColor = (color: string, name: string) => {
+    if (!color || typeof color !== "string") {
+      throw new Error(`Invalid ${name}: ${color}`);
+    }
+    if (!/^#[0-9a-fA-F]{6}$/.test(color)) {
+      throw new Error(`Invalid ${name} format: ${color}. Expected: #RRGGBB`);
+    }
+  };
+
+  validateColor(theme.primaryColor, "primaryColor");
+  validateColor(theme.secondaryColor, "secondaryColor");
+  validateColor(theme.backgroundColor, "backgroundColor");
+  validateColor(theme.textColor, "textColor");
+
   // Keep it small & atomic; rewrite textContent on each apply/remove
   const lines = [
     `--primary-color: ${theme.primaryColor};`,

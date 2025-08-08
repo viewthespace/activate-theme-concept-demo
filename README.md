@@ -76,7 +76,7 @@ interface Theme {
 ### Usage Example
 
 ```tsx
-import { useTheme } from "./context/ThemeContext";
+import { useTheme } from "./hooks/useTheme";
 
 function MyComponent() {
   const { theme, applyTheme } = useTheme();

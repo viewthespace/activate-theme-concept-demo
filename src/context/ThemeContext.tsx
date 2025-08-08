@@ -1,29 +1,7 @@
-import React, { createContext, useCallback, useContext, useLayoutEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Theme, ThemeContextValue } from '../types';
-import { ensureStyleNode, themeToCSS } from '../utils/themeUtils';
-
-// Helper function to calculate contrast color
-function getContrastColor(backgroundColor: string): string {
-  const hex = backgroundColor.replace('#', '');
-  const r = parseInt(hex.substr(0, 2), 16);
-  const g = parseInt(hex.substr(2, 2), 16);
-  const b = parseInt(hex.substr(4, 2), 16);
-  
-  // Calculate luminance
-  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-  
-  // Use white text on dark backgrounds, black text on light backgrounds
-  return luminance > 0.5 ? "#000000" : "#ffffff";
-}
-
-// ====== Context ======
-const ThemeContext = createContext<ThemeContextValue | null>(null);
-
-export function useTheme() {
-  const ctx = useContext(ThemeContext);
-  if (!ctx) throw new Error("useTheme must be used within ThemeProvider");
-  return ctx;
-}
+import { ensureStyleNode, themeToCSS, getContrastColor } from '../utils/themeUtils';
+import { ThemeContext } from './ThemeContextValue';
 
 // ====== Provider ======
 export function ThemeProvider({
@@ -48,9 +26,17 @@ export function ThemeProvider({
   }, [defaultTheme]);
 
   const writeTokens = useCallback((t: Theme) => {
-    const node = styleRef.current ?? ensureStyleNode();
-    if (node) node.textContent = themeToCSS(t);
-  }, []);
+    try {
+      const node = styleRef.current ?? ensureStyleNode();
+      if (node) node.textContent = themeToCSS(t);
+    } catch (error) {
+      console.error('Failed to write theme tokens:', error);
+      // Fallback to default theme
+      if (styleRef.current) {
+        styleRef.current.textContent = themeToCSS(defaultTheme);
+      }
+    }
+  }, [defaultTheme]);
 
   const applyTheme = useCallback(
     (next: Partial<Theme>) => {

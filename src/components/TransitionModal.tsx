@@ -1,4 +1,4 @@
-import React from "react";
+
 
 interface TransitionModalProps {
   isVisible: boolean;
@@ -6,26 +6,27 @@ interface TransitionModalProps {
 }
 
 export function TransitionModal({ isVisible, themeName }: TransitionModalProps) {
-  console.log('TransitionModal render:', { isVisible, themeName });
-  
   if (!isVisible) return null;
 
   return (
     <div 
       className="fixed inset-0 z-[9999] flex items-center justify-center"
-      style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 9999 }}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Theme transition in progress"
     >
       {/* Semi-opaque backdrop */}
-      <div 
-        className="absolute inset-0 bg-black-500/80"
-        style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0, 0, 0, 0.6)' }}
-      />
+      <div className="absolute inset-0 bg-black/60" />
       
       {/* Modal content */}
       <div className="relative bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-8 max-w-sm mx-4 border border-gray-200 dark:border-gray-700">
         <div className="flex items-center justify-center space-x-4">
           {/* Loading spinner */}
-          <div className="animate-spin rounded-full h-8 w-8 border-4 border-blue-600 border-t-transparent"></div>
+          <div 
+            className="animate-spin rounded-full h-8 w-8 border-4 border-blue-600 border-t-transparent"
+            role="status"
+            aria-label="Loading"
+          />
           
           {/* Text */}
           <div className="text-xl font-semibold text-gray-900 dark:text-gray-100">

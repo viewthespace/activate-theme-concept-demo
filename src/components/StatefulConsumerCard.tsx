@@ -1,10 +1,9 @@
-import { useTheme } from "../context/ThemeContext";
+import { useTheme } from "../hooks/useTheme";
 import { ThemeButton } from "./ui";
 
 function Swatch({ label, color }: { label: string; color: string }) {
-  // Validate that color is a string
-  if (typeof color !== 'string') {
-    console.error('Invalid color value:', color, 'for label:', label);
+  // Validate that color is a string and has valid hex format
+  if (typeof color !== 'string' || !/^#[0-9a-fA-F]{6}$/.test(color)) {
     return null;
   }
   
