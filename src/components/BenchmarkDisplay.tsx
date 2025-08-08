@@ -1,5 +1,12 @@
 import { useState, useEffect } from 'react';
 import { benchmarkTracker, BenchmarkStats, formatTime, getPerformanceColor } from '../utils/benchmarkUtils';
+import { 
+  cardStyles, 
+  statusStyles, 
+  infoStyles, 
+  cn,
+  buildButtonStyles 
+} from '../utils/styling';
 
 export function BenchmarkDisplay() {
   const [stats, setStats] = useState<BenchmarkStats>({
@@ -51,14 +58,14 @@ export function BenchmarkDisplay() {
   const winner = getWinner();
 
   return (
-    <div className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 shadow-2xl transition-all duration-300">
+    <div className={cardStyles.base}>
       {/* Animated background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[var(--secondary-color)]/10 via-transparent to-[var(--primary-color)]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+      <div className={cardStyles.animatedBackground}></div>
       
-      <div className="relative p-8">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-3 h-3 rounded-full bg-[var(--secondary-color)]"></div>
-          <h2 className="text-2xl font-bold text-[var(--text-color)]">Performance Benchmark</h2>
+      <div className={cardStyles.content}>
+        <div className={cardStyles.header}>
+          <div className={cn(cardStyles.indicator, "bg-[var(--secondary-color)]")}></div>
+          <h2 className={cardStyles.title}>Performance Benchmark</h2>
         </div>
 
         {/* Controls */}
@@ -66,20 +73,20 @@ export function BenchmarkDisplay() {
           <button
             onClick={handleStartBenchmark}
             disabled={isRunning}
-            className="px-4 py-2 bg-[var(--primary-color)] text-white rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[var(--primary-color)]/90 transition-colors"
+            className={buildButtonStyles('primary')}
           >
             Start Benchmark
           </button>
           <button
             onClick={handleStopBenchmark}
             disabled={!isRunning}
-            className="px-4 py-2 bg-[var(--secondary-color)] text-white rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[var(--secondary-color)]/90 transition-colors"
+            className={buildButtonStyles('secondary')}
           >
             Stop Benchmark
           </button>
           <button
             onClick={handleClearBenchmark}
-            className="px-4 py-2 bg-white/10 text-[var(--text-color)] rounded-lg font-semibold hover:bg-white/20 transition-colors"
+            className={buildButtonStyles('ghost')}
           >
             Clear Results
           </button>
@@ -91,7 +98,7 @@ export function BenchmarkDisplay() {
               window.dispatchEvent(new CustomEvent('benchmark-theme-change', { detail: randomTheme }));
             }}
             disabled={!isRunning}
-            className="px-4 py-2 bg-green-500 text-white rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-green-600 transition-colors"
+            className={buildButtonStyles('success')}
           >
             Single Test
           </button>
@@ -114,7 +121,7 @@ export function BenchmarkDisplay() {
               };
             }}
             disabled={!isRunning}
-            className="px-4 py-2 bg-orange-500 text-white rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-orange-600 transition-colors"
+            className={buildButtonStyles('warning')}
           >
             Stress Test (5s)
           </button>
@@ -122,9 +129,9 @@ export function BenchmarkDisplay() {
 
         {/* Status */}
         <div className="mb-6">
-          <div className="flex items-center gap-2">
-            <div className={`w-3 h-3 rounded-full ${isRunning ? 'bg-green-500 animate-pulse' : 'bg-gray-500'}`}></div>
-            <span className="text-[var(--text-color)] font-medium">
+          <div className={statusStyles.container}>
+            <div className={cn(statusStyles.indicator, isRunning ? statusStyles.running : statusStyles.stopped)}></div>
+            <span className={statusStyles.text}>
               {isRunning ? 'Benchmark Running...' : 'Benchmark Stopped'}
             </span>
           </div>
@@ -281,12 +288,12 @@ export function BenchmarkDisplay() {
         )}
 
         {/* Instructions */}
-        <div className="mt-6 p-4 bg-black/20 rounded-xl border border-[var(--text-color)]/10">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-2 h-2 rounded-full bg-[var(--secondary-color)]"></div>
-            <span className="text-sm font-medium text-[var(--text-color)]">How to Benchmark</span>
+        <div className={cn(infoStyles.container, "mt-6")}>
+          <div className={infoStyles.header}>
+            <div className={cn(infoStyles.indicator, "bg-[var(--secondary-color)]")}></div>
+            <span className={infoStyles.title}>How to Benchmark</span>
           </div>
-          <p className="text-xs text-[var(--text-color)]/60">
+          <p className={infoStyles.content}>
             Click "Start Benchmark" then use "Single Test" or "Stress Test" buttons to trigger synchronous theme changes. The benchmark measures actual theme application performance for both context-based and token-based approaches.
           </p>
         </div>
