@@ -4,7 +4,10 @@ A beautiful demonstration of dynamic theming with React, TypeScript, and Tailwin
 
 ## 🎥 Preview
 
-https://github.com/your-username/theme-demo/assets/your-user-id/theme-demo-recording.mov
+<video width="100%" controls>
+  <source src="./public/theme-demo-recording.mov" type="video/quicktime">
+  Your browser does not support the video tag.
+</video>
 
 _Watch the demo in action - real-time theme switching with performance benchmarking_
 
