@@ -343,6 +343,24 @@ The application includes a comprehensive benchmark system to compare the perform
 - **Token Approach**: Direct CSS variable updates with DOM reflow costs
 - **Real-world Performance**: Actual user experience differences between approaches
 
+### Benchmark Performance Variation
+
+The benchmark results can vary based on system conditions and load:
+
+#### Expected Behavior
+
+- **Normal conditions**: TokenConsumerCard typically wins because direct DOM manipulation is faster than React's render cycle
+- **High system load** (e.g., video recording): StatefulConsumerCard might win because browser optimizations for CSS variables can be affected by system pressure, while React's batching might be more consistent
+
+#### Why Results Vary
+
+1. **System Load**: Additional processes (like video recording) increase system load, which can affect React's rendering performance more than direct DOM manipulation
+2. **Browser Optimization**: CSS variable updates are often batched and optimized by the browser, while React re-renders involve more JavaScript execution
+3. **Measurement Timing**: TokenConsumerCard measures isolated DOM operations, while StatefulConsumerCard measures the entire React render cycle
+4. **Memory Pressure**: High system load increases memory pressure, which can impact React's reconciliation process more than direct DOM operations
+
+This variation demonstrates the real-world complexity of performance benchmarking - results can fluctuate based on system conditions, making it important to run benchmarks multiple times under different conditions.
+
 ## 📱 Responsive Design
 
 The application uses CSS Grid for layout and is fully responsive:
