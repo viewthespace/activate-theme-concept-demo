@@ -4,12 +4,11 @@ A beautiful demonstration of dynamic theming with React, TypeScript, and Tailwin
 
 ## 🎥 Preview
 
-<video width="100%" controls>
-  <source src="./public/theme-demo-recording.mov" type="video/quicktime">
-  Your browser does not support the video tag.
-</video>
+https://github.com/your-username/theme-demo/assets/your-user-id/theme-demo-recording.mov
 
 _Watch the demo in action - real-time theme switching with performance benchmarking_
+
+> **Note**: After pushing to GitHub, replace the above URL with the actual GitHub-hosted video URL. You can drag and drop the `public/theme-demo-recording.mov` file directly into this README editor on GitHub to automatically generate the correct URL.
 
 ## ✨ Features
 
