@@ -8,8 +8,6 @@ https://github.com/user-attachments/assets/0245d834-d90f-4666-be95-42fd44f2669e
 
 _Watch the demo in action - real-time theme switching with performance benchmarking_
 
-> **Note**: After pushing to GitHub, replace the above URL with the actual GitHub-hosted video URL. You can drag and drop the `public/theme-demo-recording.mov` file directly into this README editor on GitHub to automatically generate the correct URL.
-
 ## ✨ Features
 
 - **Dynamic Theme Switching**: Real-time theme changes with smooth transitions
