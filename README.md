@@ -4,7 +4,7 @@ A beautiful demonstration of dynamic theming with React, TypeScript, and Tailwin
 
 ## 🎥 Preview
 
-https://github.com/your-username/theme-demo/assets/your-user-id/theme-demo-recording.mov
+https://github.com/user-attachments/assets/0245d834-d90f-4666-be95-42fd44f2669e
 
 _Watch the demo in action - real-time theme switching with performance benchmarking_
 
