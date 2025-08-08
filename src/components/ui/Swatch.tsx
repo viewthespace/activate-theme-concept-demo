@@ -21,14 +21,14 @@ export function Swatch({ label, color, cssVariable, className = '' }: SwatchProp
       <div className="flex items-center gap-4">
         <div className="relative">
           <div 
-            className="inline-block w-12 h-12 rounded-xl ring-2 ring-white/20 shadow-lg group-hover:ring-[color:var(--primary-color)] transition-all duration-300" 
+            className="inline-block w-12 h-12 rounded-xl ring-2 ring-white/20 shadow-lg transition-all duration-300" 
             style={{ backgroundColor }}
           />
-          <div className="absolute -inset-1 bg-gradient-to-r from-[var(--primary-color)]/20 to-[var(--secondary-color)]/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm"></div>
+          <div className="absolute -inset-1 bg-gradient-to-r from-white/20 to-white/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm"></div>
         </div>
         <div className="flex flex-col">
-          <span className="text-sm font-semibold text-[var(--text-color)]">{label}</span>
-          <span className="text-xs text-[var(--text-color)]/60 font-mono" style={{ color: backgroundColor }}>{displayValue}</span>
+          <span className="text-sm font-semibold text-white/80">{label}</span>
+          <span className="text-xs text-white/60 font-mono" style={{ color: backgroundColor }}>{displayValue}</span>
         </div>
       </div>
     </div>
