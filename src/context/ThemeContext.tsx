@@ -1,6 +1,7 @@
 import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Theme, ThemeContextValue } from '../types';
 import { ensureStyleNode, themeToCSS, getContrastColor } from '../utils/themeUtils';
+import { applyThemeWithValidation, resetThemeToDefault } from '../utils/themeApplication';
 import { ThemeContext } from './ThemeContextValue';
 
 // ====== Provider ======
@@ -41,30 +42,24 @@ export function ThemeProvider({
   const applyTheme = useCallback(
     (next: Partial<Theme>) => {
       setTheme((prev) => {
-        const merged: Theme = {
-          primaryColor: next.primaryColor ?? prev.primaryColor,
-          secondaryColor: next.secondaryColor ?? prev.secondaryColor,
-          backgroundColor: next.backgroundColor ?? prev.backgroundColor,
-          textColor: next.textColor ?? (next.backgroundColor ? getContrastColor(next.backgroundColor) : prev.textColor),
-        };
+        // Handle automatic text color calculation for background changes
+        const themeWithTextColor = next.backgroundColor 
+          ? { ...next, textColor: getContrastColor(next.backgroundColor) }
+          : next;
+        
+        const merged = applyThemeWithValidation(prev, themeWithTextColor, defaultTheme);
         // Write tokens immediately to avoid render-timing races
         writeTokens(merged);
-        if (typeof document !== "undefined") {
-          document.documentElement.setAttribute("data-theme", "custom");
-        }
         return merged;
       });
     },
-    [writeTokens]
+    [writeTokens, defaultTheme]
   );
 
   const removeTheme = useCallback(() => {
     setTheme(() => {
+      resetThemeToDefault(defaultTheme);
       writeTokens(defaultTheme);
-      if (typeof document !== "undefined") {
-        // optional: set to "default" for easier debugging/targeting
-        document.documentElement.setAttribute("data-theme", "default");
-      }
       return defaultTheme;
     });
   }, [defaultTheme, writeTokens]);

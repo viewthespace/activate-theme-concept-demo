@@ -1,33 +1,8 @@
 import { useEffect, useRef } from "react";
 import { useTheme } from "../hooks/useTheme";
-import { ThemeButton } from "./ui";
+import { ThemeButton, Swatch } from "./ui";
 import { benchmarkTracker } from "../utils/benchmarkUtils";
-import { BENCHMARK_THEMES } from "../utils/themeUtils";
-
-function Swatch({ label, color }: { label: string; color: string }) {
-  // Validate that color is a string and has valid hex format
-  if (typeof color !== 'string' || !/^#[0-9a-fA-F]{6}$/.test(color)) {
-    return null;
-  }
-  
-  return (
-    <div className="group relative p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-300">
-      <div className="flex items-center gap-4">
-        <div className="relative">
-          <div 
-            className="inline-block w-12 h-12 rounded-xl ring-2 ring-white/20 shadow-lg group-hover:ring-[color:var(--primary-color)] transition-all duration-300" 
-            style={{ backgroundColor: color }}
-          />
-          <div className="absolute -inset-1 bg-gradient-to-r from-[var(--primary-color)]/20 to-[var(--secondary-color)]/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm"></div>
-        </div>
-        <div className="flex flex-col">
-          <span className="text-sm font-semibold text-[var(--text-color)]">{label}</span>
-          <span className="text-xs text-[var(--text-color)]/60 font-mono" style={{ color: color }}>{color}</span>
-        </div>
-      </div>
-    </div>
-  );
-}
+import { BENCHMARK_THEMES } from "../constants";
 
 export function StatefulConsumerCard() {
   const { theme, applyTheme } = useTheme();

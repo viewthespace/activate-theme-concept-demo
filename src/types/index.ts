@@ -1,8 +1,8 @@
 export type Theme = {
-  primaryColor: `${string}`; // template literal type
-  secondaryColor: `${string}`;
-  backgroundColor: `${string}`;
-  textColor: `${string}`; // Calculated for optimal contrast
+  primaryColor: `#${string}`; // hex color format
+  secondaryColor: `#${string}`;
+  backgroundColor: `#${string}`;
+  textColor: `#${string}`; // Calculated for optimal contrast
 };
 
 export type ThemeContextValue = {

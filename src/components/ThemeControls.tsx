@@ -41,7 +41,7 @@ export function ThemeControls() {
         color="primary"
         onClick={() => onSelect("solarized")}
       >
-        Apply Solarized
+        Apply Solarized (Async)
       </Button>
       
       <Button
@@ -49,7 +49,7 @@ export function ThemeControls() {
         color="primary"
         onClick={() => onSelect("light")}
       >
-        Apply Light
+        Apply Light (Async)
       </Button>
       
       <Button

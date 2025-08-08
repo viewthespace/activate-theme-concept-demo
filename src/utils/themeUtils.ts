@@ -1,4 +1,5 @@
 import { Theme } from "../types";
+import { validateTheme } from "./validation";
 
 // ====== Utils ======
 export const THEME_STYLE_ID = "theme-tokens";
@@ -26,7 +27,7 @@ function calculateLuminance(r: number, g: number, b: number): number {
   return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
 }
 
-export function getContrastColor(backgroundColor: string): string {
+export function getContrastColor(backgroundColor: string): `#${string}` {
   try {
     const rgb = hexToRgb(backgroundColor);
     const luminance = calculateLuminance(rgb.r, rgb.g, rgb.b);
@@ -41,6 +42,7 @@ export function getContrastColor(backgroundColor: string): string {
   }
 }
 
+// ====== Style Management ======
 export function ensureStyleNode(): HTMLStyleElement | null {
   if (typeof document === "undefined") return null;
   let el = document.getElementById(THEME_STYLE_ID) as HTMLStyleElement | null;
@@ -53,20 +55,7 @@ export function ensureStyleNode(): HTMLStyleElement | null {
 }
 
 export function themeToCSS(theme: Theme): string {
-  // Validate theme colors before generating CSS
-  const validateColor = (color: string, name: string) => {
-    if (!color || typeof color !== "string") {
-      throw new Error(`Invalid ${name}: ${color}`);
-    }
-    if (!/^#[0-9a-fA-F]{6}$/.test(color)) {
-      throw new Error(`Invalid ${name} format: ${color}. Expected: #RRGGBB`);
-    }
-  };
-
-  validateColor(theme.primaryColor, "primaryColor");
-  validateColor(theme.secondaryColor, "secondaryColor");
-  validateColor(theme.backgroundColor, "backgroundColor");
-  validateColor(theme.textColor, "textColor");
+  validateTheme(theme);
 
   // Keep it small & atomic; rewrite textContent on each apply/remove
   const lines = [
@@ -78,56 +67,7 @@ export function themeToCSS(theme: Theme): string {
   return `:root{\n  ${lines.join("\n  ")}\n}`;
 }
 
-// ====== Example: Async theme application ======
-export async function fetchThemeFromAPI(name: string): Promise<Partial<Theme>> {
-  // Simulated latency + payload from your backend/preferences
-  await new Promise((r) => setTimeout(r, 1500));
-  if (name === "solarized") {
-    const backgroundColor = "#002b36";
-    return {
-      primaryColor: "#268bd2",
-      secondaryColor: "#2aa198",
-      backgroundColor,
-      textColor: getContrastColor(backgroundColor),
-    };
-  }
-  if (name === "light") {
-    const backgroundColor = "#ffffff";
-    return {
-      primaryColor: "#1d4ed8",
-      secondaryColor: "#059669",
-      backgroundColor,
-      textColor: getContrastColor(backgroundColor),
-    };
-  }
-  // Partial example: only tweak one token, leave others as-is
-  return { primaryColor: "#7c3aed" }; // violet-600
-}
-
-// ====== Synchronous theme functions for benchmarking ======
-export function getThemeSync(name: string): Partial<Theme> {
-  if (name === "solarized") {
-    const backgroundColor = "#002b36";
-    return {
-      primaryColor: "#268bd2",
-      secondaryColor: "#2aa198",
-      backgroundColor,
-      textColor: getContrastColor(backgroundColor),
-    };
-  }
-  if (name === "light") {
-    const backgroundColor = "#ffffff";
-    return {
-      primaryColor: "#1d4ed8",
-      secondaryColor: "#059669",
-      backgroundColor,
-      textColor: getContrastColor(backgroundColor),
-    };
-  }
-  // Partial example: only tweak one token, leave others as-is
-  return { primaryColor: "#7c3aed" }; // violet-600
-}
-
+// ====== Theme Definitions ======
 export const BENCHMARK_THEMES = {
   solarized: {
     primaryColor: "#268bd2",
@@ -154,3 +94,27 @@ export const BENCHMARK_THEMES = {
     textColor: "#ffffff",
   },
 } as const;
+
+// ====== Theme Fetching ======
+export async function fetchThemeFromAPI(name: string): Promise<Partial<Theme>> {
+  // Simulated latency + payload from your backend/preferences
+  await new Promise((r) => setTimeout(r, 1500));
+
+  const theme = BENCHMARK_THEMES[name as keyof typeof BENCHMARK_THEMES];
+  if (theme) {
+    return theme;
+  }
+
+  // Partial example: only tweak one token, leave others as-is
+  return { primaryColor: "#7c3aed" }; // violet-600
+}
+
+export function getThemeSync(name: string): Partial<Theme> {
+  const theme = BENCHMARK_THEMES[name as keyof typeof BENCHMARK_THEMES];
+  if (theme) {
+    return theme;
+  }
+
+  // Partial example: only tweak one token, leave others as-is
+  return { primaryColor: "#7c3aed" }; // violet-600
+}

@@ -1,28 +1,8 @@
 import { useEffect } from "react";
-import { TokenButton } from "./ui";
+import { TokenButton, Swatch } from "./ui";
 import { benchmarkTracker } from "../utils/benchmarkUtils";
-import { BENCHMARK_THEMES } from "../utils/themeUtils";
-
-// Simple color swatch component
-function ColorSwatch({ label, cssVariable }: { label: string; cssVariable: string }) {
-  return (
-    <div className="group relative p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-300">
-      <div className="flex items-center gap-4">
-        <div className="relative">
-          <div 
-            className="inline-block w-12 h-12 rounded-xl ring-2 ring-white/20 shadow-lg group-hover:ring-[color:var(--primary-color)] transition-all duration-300" 
-            style={{ backgroundColor: `var(${cssVariable})` }}
-          />
-          <div className="absolute -inset-1 bg-gradient-to-r from-[var(--primary-color)]/20 to-[var(--secondary-color)]/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm"></div>
-        </div>
-        <div className="flex flex-col">
-          <span className="text-sm font-semibold text-[var(--text-color)]">{label}</span>
-          <span className="text-xs text-[var(--text-color)]/60 font-mono" style={{ color: `var(${cssVariable})` }}>{cssVariable}</span>
-        </div>
-      </div>
-    </div>
-  );
-}
+import { applyThemeToCSSVariables } from "../utils/themeApplication";
+import { BENCHMARK_THEMES } from "../constants";
 
 export function TokenConsumerCard() {
   // Listen for benchmark theme changes
@@ -35,14 +15,10 @@ export function TokenConsumerCard() {
       const theme = BENCHMARK_THEMES[newTheme as keyof typeof BENCHMARK_THEMES];
       
       // Simulate the complete process: theme lookup + DOM query + style updates
-      const style = document.documentElement.style;
-      style.setProperty('--primary-color', theme.primaryColor);
-      style.setProperty('--secondary-color', theme.secondaryColor);
-      style.setProperty('--background-color', theme.backgroundColor);
-      style.setProperty('--text-color', theme.textColor);
+      applyThemeToCSSVariables(theme);
       
       // Force a reflow to ensure the changes are applied
-      document.documentElement.offsetHeight;
+      void document.documentElement.offsetHeight;
       
       const end = performance.now();
       
@@ -75,10 +51,10 @@ export function TokenConsumerCard() {
           <div>
             <h3 className="text-lg font-semibold text-[var(--text-color)] mb-4">CSS Variable Palette</h3>
             <div className="grid grid-cols-1 gap-4">
-              <ColorSwatch label="Primary Color" cssVariable="--primary-color" />
-              <ColorSwatch label="Secondary Color" cssVariable="--secondary-color" />
-              <ColorSwatch label="Background Color" cssVariable="--background-color" />
-              <ColorSwatch label="Text Color" cssVariable="--text-color" />
+              <Swatch label="Primary Color" cssVariable="--primary-color" />
+              <Swatch label="Secondary Color" cssVariable="--secondary-color" />
+              <Swatch label="Background Color" cssVariable="--background-color" />
+              <Swatch label="Text Color" cssVariable="--text-color" />
             </div>
           </div>
 

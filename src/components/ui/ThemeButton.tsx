@@ -1,15 +1,5 @@
-import React from 'react';
 import { useTheme } from '../../hooks/useTheme';
-
-type ButtonVariant = 'solid' | 'outlined';
-type ButtonColor = 'primary' | 'secondary';
-
-interface ThemeButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: ButtonVariant;
-  color?: ButtonColor;
-  children: React.ReactNode;
-  className?: string;
-}
+import { ButtonBase, ButtonBaseProps } from './index';
 
 export function ThemeButton({ 
   variant = 'solid', 
@@ -17,10 +7,8 @@ export function ThemeButton({
   children, 
   className = '',
   ...props 
-}: ThemeButtonProps) {
+}: ButtonBaseProps) {
   const { theme } = useTheme();
-  
-  const baseStyles = 'inline-flex items-center justify-center px-6 py-3 rounded-xl font-semibold text-base shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-transparent active:scale-95 cursor-pointer min-h-[44px]';
   
   // Get the appropriate color based on the color prop
   const themeColor = color === 'primary' ? theme.primaryColor : theme.secondaryColor;
@@ -48,8 +36,10 @@ export function ThemeButton({
   const variantStyles = getVariantStyles();
   
   return (
-    <button 
-      className={`${baseStyles} ${className}`}
+    <ButtonBase 
+      variant={variant}
+      color={color}
+      className={className}
       style={variantStyles}
       onMouseEnter={(e) => {
         if (variant === 'outlined') {
@@ -64,6 +54,6 @@ export function ThemeButton({
       {...props}
     >
       {children}
-    </button>
+    </ButtonBase>
   );
 } 

@@ -5,7 +5,7 @@ import { TokenConsumerCard } from './components/TokenConsumerCard';
 import { StatefulConsumerCard } from './components/StatefulConsumerCard';
 import { TransitionModal } from './components/TransitionModal';
 import { BenchmarkDisplay } from './components/BenchmarkDisplay';
-import { DEFAULT_THEME } from './constants/themes';
+import { DEFAULT_THEME } from './constants';
 
 // Tailwind class constants for better readability
 const classes = {

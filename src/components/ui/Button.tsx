@@ -1,14 +1,4 @@
-import React from 'react';
-
-type ButtonVariant = 'solid' | 'outlined';
-type ButtonColor = 'primary' | 'secondary';
-
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: ButtonVariant;
-  color?: ButtonColor;
-  children: React.ReactNode;
-  className?: string;
-}
+import { ButtonBase, ButtonBaseProps } from './index';
 
 const variantStyles = {
   solid: {
@@ -26,19 +16,18 @@ export function Button({
   color = 'primary', 
   children, 
   className = '',
-  type = 'button',
   ...props 
-}: ButtonProps) {
-  const baseStyles = 'inline-flex items-center justify-center px-8 py-4 rounded-xl font-semibold text-base shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-transparent active:scale-95 cursor-pointer min-h-[48px]';
+}: ButtonBaseProps) {
   const variantStyle = variantStyles[variant][color];
   
   return (
-    <button 
-      type={type}
-      className={`${baseStyles} ${variantStyle} ${className}`}
+    <ButtonBase 
+      variant={variant}
+      color={color}
+      className={`${variantStyle} ${className}`}
       {...props}
     >
       {children}
-    </button>
+    </ButtonBase>
   );
 } 

@@ -105,7 +105,13 @@ export function BenchmarkDisplay() {
                 window.dispatchEvent(new CustomEvent('benchmark-theme-change', { detail: randomTheme }));
               }, 100);
               
-              setTimeout(() => clearInterval(interval), 5000); // Stop after 5 seconds
+              const timeout = setTimeout(() => clearInterval(interval), 5000); // Stop after 5 seconds
+              
+              // Cleanup function to prevent memory leaks
+              return () => {
+                clearInterval(interval);
+                clearTimeout(timeout);
+              };
             }}
             disabled={!isRunning}
             className="px-4 py-2 bg-orange-500 text-white rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-orange-600 transition-colors"

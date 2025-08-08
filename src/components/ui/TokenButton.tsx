@@ -1,15 +1,5 @@
-import React from 'react';
 import clsx from 'clsx';
-
-type ButtonVariant = 'solid' | 'outlined';
-type ButtonColor = 'primary' | 'secondary';
-
-interface TokenButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: ButtonVariant;
-  color?: ButtonColor;
-  children: React.ReactNode;
-  className?: string;
-}
+import { ButtonBase, ButtonBaseProps } from './index';
 
 const variantStyles = {
   solid: {
@@ -28,20 +18,17 @@ export function TokenButton({
   children, 
   className = '',
   ...props 
-}: TokenButtonProps) {
-  const baseStyles = 'inline-flex items-center justify-center px-6 py-3 rounded-xl font-semibold text-base shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-transparent active:scale-95 cursor-pointer min-h-[44px]';
+}: ButtonBaseProps) {
   const variantStyle = variantStyles[variant][color];
   
   return (
-    <button 
-      className={clsx(
-        baseStyles,
-        variantStyle,
-        className
-      )}
+    <ButtonBase 
+      variant={variant}
+      color={color}
+      className={clsx(variantStyle, className)}
       {...props}
     >
       {children}
-    </button>
+    </ButtonBase>
   );
 } 

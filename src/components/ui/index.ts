@@ -1,3 +1,10 @@
 export { Button } from "./Button";
-export { TokenButton } from "./TokenButton";
+export {
+  ButtonBase,
+  type ButtonBaseProps,
+  type ButtonVariant,
+  type ButtonColor,
+} from "./ButtonBase";
 export { ThemeButton } from "./ThemeButton";
+export { TokenButton } from "./TokenButton";
+export { Swatch } from "./Swatch";
